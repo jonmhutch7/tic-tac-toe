@@ -42,3 +42,11 @@ table.board td {
 	width: 150px;
 	border: 1px solid black;
 }
+
+table.board td.player1 {
+	background-color: blue;
+}
+
+table.board td.player2 {
+	background-color: red;
+}
