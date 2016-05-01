@@ -5,22 +5,34 @@ $(document).ready(function() {
 		retrieveGame();
 	}
 
+	$.ajax({
+		type: 'GET',
+		url: 'http://127.0.0.1:8080',
+		success: function (data) {
+		    console.log(data);
+		},
+		error: function (xhr, status, error) {
+		   alert('Server Error:' + error);
+		}
+	});
+
 	$('td.empty').on('click', function() {
 		var game = JSON.parse(localStorage.getItem('game'));
+		if ($(this).hasClass('player1') || $(this).hasClass('player2')) {
+			$(this).removeClass('empty');
+			$(this).addClass(game.turn);
+			
+			var parent = $(this).parent();
+			var parentIndex = $('tr').index(parent);
 
-		$(this).removeClass('empty');
-		$(this).addClass(game.turn);
-		
-		var parent = $(this).parent();
-		var parentIndex = $('tr').index(parent);
+			var thisIndex = $($(parent).children()).index(this);
 
-		var thisIndex = $($(parent).children()).index(this);
+			game.board[parentIndex]['c' + (thisIndex+1)] = game.turn;
 
-		game.board[parentIndex]['c' + (thisIndex+1)] = game.turn;
+			var space = thisIndex+1
 
-		var space = thisIndex+1
-
-		checkWin(game, parentIndex, space, winner, continueGame);
+			checkWin(game, parentIndex, space, winner, continueGame);
+		}
 	});
 });
 
