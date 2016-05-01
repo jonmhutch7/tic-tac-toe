@@ -1,0 +1,44 @@
+body {
+	font-family: 'helvetica', sans-serif;
+}
+
+section {
+	width: 100%;
+	max-width: 768px;
+	margin: 30px auto;
+	display: block;
+}
+
+.player-display {
+	text-align: center;
+	font-size: 36px;
+}
+
+.player-display > div:before {
+	vertical-align: baseline;
+	margin-right: 10px;
+	display: inline-block;
+	font-size: 36px;
+	font-weight: bold;
+}
+
+.player-display .p1:before {
+	content: 'X';
+    color: blue;
+}
+
+.player-display .p2:before {
+	content: 'O';
+    color: red;
+}
+
+table.board {
+	margin: 25px auto 0;
+	border-collapse: collapse;
+}
+
+table.board td {
+	height: 150px;
+	width: 150px;
+	border: 1px solid black;
+}
