@@ -1,12 +1,3 @@
-//game
-
-//Handle clicks depending on player
-//Handle board logic to define who wins
-
-// {
-// 	'board': {'11': null, '12': null, '13': null, '21': null, '22': null, '23': null, '31': null, '32': null, '33': null}
-// }
-
 $(document).ready(function() {
 	if (!localStorage.getItem('game')) {
 		setGame();
@@ -27,20 +18,37 @@ $(document).ready(function() {
 
 		game.board[parentIndex]['c' + (thisIndex+1)] = game.turn;
 
-		if (game.turn === 'player1') {
-			game.turn = 'player2';
-		} else {
-			game.turn = 'player1';
-		}
+		var space = thisIndex+1
 
-		localStorage.setItem("game", JSON.stringify(game));
-
-		if($('td.empty').length === 0) {
-			localStorage.removeItem('game');
-			location.reload();
-		}
+		checkWin(game, parentIndex, space, winner, continueGame);
 	});
 });
+
+var continueGame = function(game) {
+	if (game.turn === 'player1') {
+		game.turn = 'player2';
+	} else {
+		game.turn = 'player1';
+	}
+
+	localStorage.setItem("game", JSON.stringify(game));
+
+	if($('td.empty').length === 0) {
+		alert('Game Over. Board will reset in 5 seconds.');
+		setTimeout(function(){
+			localStorage.removeItem('game');
+			location.reload();
+		},5000)
+	}
+}
+
+var winner = function(game) {
+	alert(game.turn + ' wins! Board will reset in 5 seconds.');
+	setTimeout(function(){
+		localStorage.removeItem('game');
+		location.reload();
+	},5000)
+}
 
 function setGame() {
 	var rows = $('tr');
@@ -72,6 +80,62 @@ function retrieveGame() {
 	}
 }
 
-function checkWin() {
-	
+function checkWin(game, rowIndex, space, winner, continueGame) {
+	var game = game;
+	var node = node;
+	var rows = $('tr').length;
+	var player = game.turn;
+
+	//in a row
+	for (var i = 0; i < game.board.length; i++) {
+		var cells = $($('tr')[i]).children();
+		var spaces = 0;
+		for (var j = 0; j < cells.length; j++) {
+			var className = $(cells[j]).attr('class');
+			if (player === className) {
+				spaces++;
+				if (spaces === cells.length) {
+					return winner(game);
+				}
+			}
+		}
+	}
+
+	//in a column
+	var spaces = 0;
+	for (var i = 0; i < game.board.length; i++) {
+		var checkAgainst = game.board[i]['c'+space];
+		if (checkAgainst === player) {
+			spaces++
+			if (spaces === rows) {
+				return winner(game);
+			}
+		}
+	}
+
+	//diagonal left to right
+	var spaces = 0;
+	for (var i = 0; i < game.board.length; i++) {
+		if (game.board[i]['c'+(i+1)] === player) {
+			spaces++
+			if (spaces === rows) {
+				return winner(game);
+			}
+		}
+	}
+
+	//diagonal right to left
+	var spaces = 0;
+	var cells = game.board.length;
+	for (var i = 0; i < game.board.length; i++) {
+		if (game.board[i]['c'+cells] === player) {
+			spaces++
+			if (spaces === rows) {
+				return winner(game);
+			}
+		}
+		cells--;
+	}
+
+	continueGame(game);
 }
