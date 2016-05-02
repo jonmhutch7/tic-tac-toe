@@ -12,7 +12,7 @@ $(document).ready(function() {
 			}
 		},
 		error: function (xhr, status, error) {
-		   console.log('error');
+		   console.log('Error: ' + error.message);
 		}
 	});
 
@@ -101,7 +101,7 @@ function setGame() {
 		url: 'http://127.0.0.1:1234',
 		data: JSON.stringify(game),
 		success: function (data) {
-		    console.log('New Game Saved');
+		    console.log('New Game Saved.');
 		    localStorage.setItem("game", JSON.stringify(game));
 		},
 		error: function (xhr, status, error) {
