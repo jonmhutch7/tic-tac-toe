@@ -15,21 +15,22 @@ section {
 }
 
 .player-display > div:before {
-	vertical-align: baseline;
-	margin-right: 10px;
+	vertical-align: top;
+	margin-right: 5px;
 	display: inline-block;
-	font-size: 36px;
-	font-weight: bold;
+	width: 36px;
+	height: 36px;
+	background-size: contain;
 }
 
 .player-display .p1:before {
-	content: 'X';
-    color: blue;
+	content:'';
+	background-image: url('./x.png');
 }
 
 .player-display .p2:before {
-	content: 'O';
-    color: red;
+	content:'';
+	background-image: url('./o.png');
 }
 
 table.board {
@@ -41,12 +42,13 @@ table.board td {
 	height: 150px;
 	width: 150px;
 	border: 1px solid black;
+	background-size: contain;
 }
 
-table.board td.player1 {
-	background-color: blue;
+table.board td.player1{
+	background-image: url('./x.png');
 }
 
 table.board td.player2 {
-	background-color: red;
+	background-image: url('./o.png');
 }

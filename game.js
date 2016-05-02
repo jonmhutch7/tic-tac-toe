@@ -1,24 +1,24 @@
 $(document).ready(function() {
-	if (!localStorage.getItem('game')) {
-		setGame();
-	} else {
-		retrieveGame();
-	}
-
 	$.ajax({
 		type: 'GET',
-		url: 'http://127.0.0.1:8080',
+		url: 'http://127.0.0.1:1234/data',
 		success: function (data) {
-		    console.log(data);
+			if (!data && !localStorage.getItem('game')) {
+				console.log('New Game Started.');
+				setGame();
+			} else {
+				console.log('Found old game.');
+				retrieveGame();
+			}
 		},
 		error: function (xhr, status, error) {
-		   alert('Server Error:' + error);
+		   console.log('error');
 		}
 	});
 
 	$('td.empty').on('click', function() {
 		var game = JSON.parse(localStorage.getItem('game'));
-		if ($(this).hasClass('player1') || $(this).hasClass('player2')) {
+		if (!$(this).hasClass('player1') && !$(this).hasClass('player2')) {
 			$(this).removeClass('empty');
 			$(this).addClass(game.turn);
 			
@@ -43,7 +43,18 @@ var continueGame = function(game) {
 		game.turn = 'player1';
 	}
 
-	localStorage.setItem("game", JSON.stringify(game));
+	$.ajax({
+		type: 'POST',
+		url: 'http://127.0.0.1:1234',
+		data: JSON.stringify(game),
+		success: function (data) {
+			console.log('Game Saved');
+		    localStorage.setItem("game", JSON.stringify(game));
+		},
+		error: function (xhr, status, error) {
+		    console.log('Error: ' + error.message);
+		}
+	});
 
 	if($('td.empty').length === 0) {
 		alert('Game Over. Board will reset in 5 seconds.');
@@ -51,6 +62,14 @@ var continueGame = function(game) {
 			localStorage.removeItem('game');
 			location.reload();
 		},5000)
+	} else {
+		if (game.turn === 'player1') {
+			$('.player-display .p1').show();
+			$('.player-display .p2').hide();
+		} else {
+			$('.player-display .p2').show();
+			$('.player-display .p1').hide();
+		}
 	}
 }
 
@@ -59,7 +78,7 @@ var winner = function(game) {
 	setTimeout(function(){
 		localStorage.removeItem('game');
 		location.reload();
-	},5000)
+	}, 5000)
 }
 
 function setGame() {
@@ -76,7 +95,19 @@ function setGame() {
 	for (var i = 0; i < rows.length; i++) {
 		game.board.push(rowObj);
 	}
-	localStorage.setItem("game", JSON.stringify(game));
+
+	$.ajax({
+		type: 'POST',
+		url: 'http://127.0.0.1:1234',
+		data: JSON.stringify(game),
+		success: function (data) {
+		    console.log('New Game Saved');
+		    localStorage.setItem("game", JSON.stringify(game));
+		},
+		error: function (xhr, status, error) {
+		    console.log('Error: ' + error.message);
+		}
+	});
 }
 
 function retrieveGame() {
@@ -89,6 +120,14 @@ function retrieveGame() {
 				$(cells[j]).addClass(game.board[i]['c'+(j+1)]);
 			}
 		}
+	}
+
+	if (game.turn === 'player1') {
+		$('.player-display .p1').show();
+		$('.player-display .p2').hide();
+	} else {
+		$('.player-display .p2').show();
+		$('.player-display .p1').hide();
 	}
 }
 
