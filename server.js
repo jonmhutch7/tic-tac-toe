@@ -37,4 +37,4 @@ http.createServer(function (request, response) {
 
 }).listen(1234);
 
-console.log('Site is running at http://127.0.0.1:8080/index.html');
+console.log('Site is running at http://127.0.0.1:1234/index.html');

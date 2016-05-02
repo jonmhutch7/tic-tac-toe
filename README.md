@@ -1,5 +1,7 @@
 # Tic Tac Toe
 
+Typing in ```node server.js``` into the command line will spin up a site at http://127.0.0.1:1234/index.html 
+
 ## HTML
 - Basic HTML document with html scaffolding and links for styles and javascript.
 - Game board consists of three rows of three cells.
